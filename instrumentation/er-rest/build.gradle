@@ -1,0 +1,19 @@
+
+repositories {
+    maven {
+        url 'https://maven.wocommunity.org/content/groups/public'
+    }
+}
+
+dependencies {
+    implementation(project(":agent-bridge"))
+    implementation('wonder.eof:ERRest:5.4.1')
+}
+
+jar {
+    manifest { attributes 'Implementation-Title': 'com.newrelic.instrumentation.er-rest' }
+}
+
+verifyInstrumentation {
+    verifyClasspath = false
+}
