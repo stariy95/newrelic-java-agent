@@ -123,7 +123,7 @@ import static com.newrelic.agent.tracing.DistributedTraceUtil.isSampledPriority;
  */
 public class Transaction {
     static final ClassMethodSignature REQUEST_INITIALIZED_CLASS_SIGNATURE = new ClassMethodSignature(
-            "javax.servlet.ServletRequestListener", "requestInitialized", "(Ljavax/servlet/ServletRequestEvent;)V");
+            "com.webobjects.appserver._private.WOActionRequestHandler", "handleRequest", "(Lcom/webobjects/appserver/WORequest;)Lcom/webobjects/appserver/WOResponse;");
     static final int REQUEST_INITIALIZED_CLASS_SIGNATURE_ID = ClassMethodSignatures.get().add(REQUEST_INITIALIZED_CLASS_SIGNATURE);
   static final ClassMethodSignature SCALA_API_TXN_CLASS_SIGNATURE = new ClassMethodSignature(
     "newrelic.scala.api.TraceOps$", "txn", null);

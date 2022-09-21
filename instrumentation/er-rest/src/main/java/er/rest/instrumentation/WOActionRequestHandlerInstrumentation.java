@@ -28,7 +28,6 @@ public class WOActionRequestHandlerInstrumentation {
         if(disabledTracing) {
             // ignore transaction if it's started by someone else
             AgentBridge.getAgent().getTransaction(false).ignore();
-            AgentBridge.getAgent().getLogger().log(Level.CONFIG, "Tracing for path '{0}' is disabled", request.requestHandlerPath());
         } else {
             try {
                 // start transaction
@@ -44,18 +43,28 @@ public class WOActionRequestHandlerInstrumentation {
             }
         }
 
-        try {
-            // Here goes original method call
-            WOResponse response = Weaver.callOriginal();
+        // Here goes original method call
+        WOResponse response = Weaver.callOriginal();
+        if(!disabledTracing && tx != null) {
+            // add response details
             if(instrumentationResponse != null) {
                 instrumentationResponse.setResponse(response);
             }
-            return response;
-        } finally {
-            if(!disabledTracing && tx != null) {
-                // mark transaction end
-                tx.requestDestroyed();
-            }
+            // mark transaction end
+            tx.requestDestroyed();
         }
+        return response;
     }
+
+//    this method is abstract here, but defined in WODirectActionRequestHandler
+//    @SuppressWarnings("unused")
+//    public WOResponse generateErrorResponse(Exception exception, WOContext aContext) {
+//        // report exception if this controller is not disabled
+//        boolean disabledTracing = aContext.request() != null
+//                && ERXHelper.disabledPaths.contains(aContext.request().requestHandlerPath());
+//        if(!disabledTracing) {
+//            NewRelic.noticeError(exception);
+//        }
+//        return Weaver.callOriginal();
+//    }
 }
